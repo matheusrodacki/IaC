@@ -3,7 +3,8 @@ module "aws-dev" {
     instance = "t2.micro"
     region = "us-east-1"
     key = "IaC-DEV"
-    tag = "DEV-SRV"  
+    tag = "DEV-SRV"
+    security_group = "mrf_sec_dev"   
 }
 
 output "public_ip_dev" {

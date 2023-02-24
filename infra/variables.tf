@@ -12,3 +12,6 @@ variable "instance" {
 variable "tag"{
     type = string
 }
+variable "security_group" {
+    type = string
+}

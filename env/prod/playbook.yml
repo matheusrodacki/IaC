@@ -1,0 +1,29 @@
+- hosts: terraform-ansible
+  tasks: 
+
+  - name: Install Python 3 and Virtualenv
+    apt:
+      pkg:
+      - python3
+      - virtualenv
+      update_cache: yes
+    become: yes
+
+  - name: Install Django and Django Rest
+    pip:
+      virtualenv: /home/ubuntu/tcc/venv
+      name:
+        - django
+        - djangorestframework
+
+  - name: Alter hosts of settings
+    lineinfile: 
+      path: /home/ubuntu/tcc/setup/settings.py
+      regexp: 'ALLOWED_HOSTS'
+      line: "ALLOWED_HOSTS = ['*']"
+      backrefs: yes
+
+  - name: Run Server
+    shell: 'cd ~/tcc; 
+            . venv/bin/activate; 
+            nohup python manage.py runserver 0.0.0.0:8000 &'

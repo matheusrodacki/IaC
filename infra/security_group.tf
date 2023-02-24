@@ -1,5 +1,5 @@
 resource "aws_security_group" "mrf_sec_group" {
-  name = "mrf_sec_group"
+  name = var.security_group
   description = "MRF Security Group"
   ingress{
     cidr_blocks = [ "0.0.0.0/0" ]
