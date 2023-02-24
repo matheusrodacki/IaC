@@ -17,14 +17,17 @@ variable "security_group" {
     type = string
 }
 
-variable "elastic_group" {
-    type = string
+variable "min" {
+    type = number
 }
 
 variable "max" {
     type = number
 }
 
-variable "min" {
-    type = number
+variable "elastic_group_name" {
+    type = string
 }
+
+
+
