@@ -18,8 +18,10 @@ resource "aws_launch_template" "app_server" {
   instance_type = var.instance
   key_name = var.key
   tags = {
-    Name = var.tag
-  }
+      Name = var.tag
+  
+      }
+  
 }
 
 resource "aws_key_pair" "sshKeys" {
@@ -33,9 +35,10 @@ resource "aws_autoscaling_group" "elastic_group" {
   name = var.elastic_group_name
   max_size =  var.max
   min_size = var.min
-  launch_template {
+    launch_template {
     id = aws_launch_template.app_server.id
     version = "$Latest"
+    
   }
-
 }
+  
