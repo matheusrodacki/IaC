@@ -10,14 +10,20 @@ terraform {
 }
 
 provider "aws" {
-  region  = "us-east-1"
+  region  = var.region
 }
 
 resource "aws_instance" "app_server" {
   ami           = "ami-0557a15b87f6559cf"
-  instance_type = "t2.micro"
-  key_name = "IaC-Alura"
+  instance_type = var.instance
+  key_name = var.key
   tags = {
-    Name = "Python Server1.0"
+    Name = var.tag
   }
+}
+
+resource "aws_key_pair" "sshKeys" {
+  key_name = var.key
+  public_key = file("${var.key}.pub")
+  
 }
