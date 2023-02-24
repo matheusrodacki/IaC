@@ -21,7 +21,8 @@ resource "aws_launch_template" "app_server" {
       Name = var.tag
   
       }
-  
+  security_group_names = [ var.security_group ]
+  user_data = filebase64("ansible.sh")
 }
 
 resource "aws_key_pair" "sshKeys" {
