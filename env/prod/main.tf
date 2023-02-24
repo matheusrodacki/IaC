@@ -5,3 +5,7 @@ module "aws-prod" {
     key = "IaC-PROD"
     tag = "PROD-SRV"  
 }
+
+output "public_ip_prod" {
+  value = module.aws-dev.public_ip  
+}
