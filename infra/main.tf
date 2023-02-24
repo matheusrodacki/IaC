@@ -13,13 +13,14 @@ provider "aws" {
   region  = var.region
 }
 
-resource "aws_instance" "app_server" {
-  ami           = "ami-0557a15b87f6559cf"
+resource "aws_launch_template" "app_server" {
+  image_id = "ami-0557a15b87f6559cf"
   instance_type = var.instance
   key_name = var.key
   tags = {
     Name = var.tag
   }
+  security_group_names = [ "var.security_group" ]
 }
 
 resource "aws_key_pair" "sshKeys" {
@@ -28,7 +29,14 @@ resource "aws_key_pair" "sshKeys" {
   
 }
 
-output "public_ip" {
-  value = aws_instance.app_server.public_ip 
-  
+resource "aws_autoscaling_group" "elastic_group" {
+  availability_zones = [ "${region}a" ]
+  name = var.elastic_group
+  max_size =  var.max
+  min_size = var.min
+  launch_template {
+    id = aws_launch_template.app_server.id
+    version = "$latest"
+  }
+
 }

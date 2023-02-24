@@ -12,6 +12,19 @@ variable "instance" {
 variable "tag"{
     type = string
 }
+
 variable "security_group" {
     type = string
+}
+
+variable "elastic_group" {
+    type = string
+}
+
+variable "max" {
+    type = number
+}
+
+variable "min" {
+    type = number
 }

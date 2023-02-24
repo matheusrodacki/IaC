@@ -4,9 +4,8 @@ module "aws-dev" {
     region = "us-east-1"
     key = "IaC-DEV"
     tag = "DEV-SRV"
-    security_group = "mrf_sec_dev"   
-}
-
-output "public_ip_dev" {
-  value = module.aws-dev.public_ip 
+    security_group = "mrf_sec_dev"
+    min = 0
+    max = 1
+    elastic_group = "mrf_dev"    
 }
