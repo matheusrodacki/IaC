@@ -30,7 +30,7 @@ resource "aws_key_pair" "sshKeys" {
 }
 
 resource "aws_autoscaling_group" "elastic_group" {
-  availability_zones = [ "${region}a" ]
+  availability_zones = [ "${var.region}a" ]
   name = var.elastic_group
   max_size =  var.max
   min_size = var.min
