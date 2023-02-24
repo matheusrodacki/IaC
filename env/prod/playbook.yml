@@ -9,12 +9,17 @@
       update_cache: yes
     become: yes
 
+  - name: Git Clone
+    ansible.builtin.git:
+      repo: https://github.com/alura-cursos/clientes-leo-api.git
+      dest: /home/ubuntu/tcc
+      version: master
+      force: yes
+      
   - name: Install Django and Django Rest
     pip:
       virtualenv: /home/ubuntu/tcc/venv
-      name:
-        - django
-        - djangorestframework
+      requirements: /home/ubuntu/tcc/requirements.txt
 
   - name: Alter hosts of settings
     lineinfile: 
