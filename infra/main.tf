@@ -79,4 +79,16 @@ resource "aws_lb_listener" "lbInbound" {
   }
 
 }
+
+resource "aws_autoscaling_policy" "PROD-Scale" {
+  name = "TF-PROD-SCALE"
+  autoscaling_group_name = var.elastic_group_name
+  policy_type = "TargetTrackingScaling"
+  target_tracking_configuration {
+    predefined_metric_specification {
+      predefined_metric_type = "ASGAverageCPUUtilization"
+    }
+    target_value = 50.0
+  }
+}
   
