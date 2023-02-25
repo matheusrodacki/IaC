@@ -22,7 +22,7 @@ resource "aws_launch_template" "app_server" {
   
       }
   security_group_names = [ var.security_group ]
-  user_data = filebase64("ansible.sh")
+  user_data = var.prod ? filebase64("ansible.sh") : ""
 }
 
 resource "aws_key_pair" "sshKeys" {
@@ -36,12 +36,12 @@ resource "aws_autoscaling_group" "elastic_group" {
   name = var.elastic_group_name
   max_size =  var.max
   min_size = var.min
+  target_group_arns = var.prod ? [ aws_lb_target_group.lbTarget[0].arn ] : []
   launch_template {
     id = aws_launch_template.app_server.id
     version = "$Latest"
     
-  }
-  target_group_arns = [ aws_lb_target_group.lbTarget.arn ]
+  }  
 }
 
 resource "aws_default_subnet" "subnet_1" {
@@ -55,7 +55,7 @@ resource "aws_default_subnet" "subnet_2" {
 resource "aws_lb" "loadBalancer" {
   internal = false 
   subnets = [ aws_default_subnet.subnet_1.id, aws_default_subnet.subnet_2.id ]
-
+  count = var.prod ? 1:0
 }
 
 resource "aws_lb_target_group" "lbTarget"{
@@ -63,6 +63,7 @@ resource "aws_lb_target_group" "lbTarget"{
   port = "8000"
   protocol = "HTTP"
   vpc_id = aws_default_vpc.default.id
+  count = var.prod ? 1:0
 }
 
 resource "aws_default_vpc" "default"{
@@ -70,14 +71,14 @@ resource "aws_default_vpc" "default"{
 }
 
 resource "aws_lb_listener" "lbInbound" {
-  load_balancer_arn = aws_lb.loadBalancer.arn
+  load_balancer_arn = aws_lb.loadBalancer[0].arn
   port = "8000"
   protocol = "HTTP"
   default_action {
     type = "forward"
     target_group_arn = aws_lb_target_group.lbTarget.arn
   }
-
+  count = var.prod ? 1:0
 }
 
 resource "aws_autoscaling_policy" "PROD-Scale" {
@@ -90,5 +91,6 @@ resource "aws_autoscaling_policy" "PROD-Scale" {
     }
     target_value = 50.0
   }
+  count = var.prod ? 1:0
 }
   
