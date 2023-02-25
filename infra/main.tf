@@ -76,7 +76,7 @@ resource "aws_lb_listener" "lbInbound" {
   protocol = "HTTP"
   default_action {
     type = "forward"
-    target_group_arn = aws_lb_target_group.lbTarget.arn
+    target_group_arn = aws_lb_target_group.lbTarget[0].arn
   }
   count = var.prod ? 1:0
 }
