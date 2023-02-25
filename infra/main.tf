@@ -45,11 +45,11 @@ resource "aws_autoscaling_group" "elastic_group" {
 }
 
 resource "aws_default_subnet" "subnet_1" {
-  availability_zone = [ "${var.region}a" ]
+  availability_zone = "${var.region}a"
 }
 
 resource "aws_default_subnet" "subnet_2" {
-  availability_zone = [ "${var.region}b" ]
+  availability_zone = "${var.region}b"
 }
 
 resource "aws_lb" "loadBalancer" {
