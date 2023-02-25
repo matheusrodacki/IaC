@@ -29,9 +29,9 @@ variable "elastic_group_name" {
     type = string
 }
 
-variable "prod{
+variable "prod" {
     type = bool
-}"
+}
 
 
 
