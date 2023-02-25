@@ -32,7 +32,7 @@ resource "aws_key_pair" "sshKeys" {
 }
 
 resource "aws_autoscaling_group" "elastic_group" {
-  availability_zones = [ "${var.region}a" ]
+  availability_zones = [ "${var.region}a","${var.region}b" ]
   name = var.elastic_group_name
   max_size =  var.max
   min_size = var.min
@@ -41,5 +41,42 @@ resource "aws_autoscaling_group" "elastic_group" {
     version = "$Latest"
     
   }
+  target_group_arns = [aws_lb_target_group.lbTarget.arn]
+}
+
+resource "aws_default_subnet" "subnet_1" {
+  availability_zones = [ "${var.region}a" ]
+}
+
+resource "aws_default_subnet" "subnet_2" {
+  availability_zones = [ "${var.region}b" ]
+}
+
+resource "aws_lb" "loadBalancer" {
+  internal  = false 
+  subnets = [ aws_default_subnet.subnet_1.id, aws_default_subnet.subnet_2.id]
+
+}
+
+resource "aws_lb_target_group" "lbTarget"{
+  name = "instance_target"
+  port = "8000"
+  protocol = "HTTP"
+  vpc_id = aws_default_vpc.id
+}
+
+resource "aws_default_vpc" "default"{
+
+}
+
+resource "aws_lb_listener" "lbinbound" {
+  load_balancer_arn = aws_lb.loadBalancer.arn
+  port = "8000"
+  protocol = "HTTP"
+  default_actions {
+    type = "forward"
+    target_group_arn = aws_lb_target_group.lbTarget.arn
+  }
+
 }
   
